@@ -1,0 +1,27 @@
+step 1 (ID 1) - VE2100 gets filled. Valves between VE2100-2300 and between 2300 and 1000 are closed (YC21006, YC22006, YC23006).
+			Pump (PL1200) fills 14L water into VE2100 (sensor L21003)from VE1000.
+
+step 2 (ID 7) - Valve to VE2100 is closed (YC21001). Valves between the tanks and the outflow valve 
+			are set to 75% (YC21006, YC22006, YC23006).
+			Ends when VE2100 contains 5L (sensor L2303)
+
+step 3 (ID 8) - Valves to VE2100 and VE2300 opened (YC21001, YC23001). Ends when VE2300 contains 10L (sensor L23003).
+			Valves YC21006, YC22006, YC23006 are still at 75%
+
+step 4 (ID 3) - Valves to VE2100-2300 closed (YC21001, YC22001, YC23001). Valves between them and outflow valve are fully opened.
+			(YC21006, YC22006, YC23006)
+			Ends when all Vessels contain less than 2L (sensor L21003, L22003, L23003)
+=> step 1
+
+
+Deviation ID	Description (sb: should be)
+1	normal operation
+2	low drive speed (2300/m sb. 2600/min)
+3	high drive speed (2900/m sb. 2600/min)
+4	2nd pump (2600/min sb. 0/min
+5	stuck valve (YC21006 at 100% sb. 75%)
+6	stuck valve (YC22006 at 100% sb. 75%)
+7	stuck valve (YC23006 at 100% sb. 75%)
+8	short circuit (YS14005 at 100% sb. 0%)
+9	leakage (PL2150 at 10Hz sb. 0Hz, YS14004 at 100% sb. 0%)
+10	no venting (SY10004 at 0% sb. 100%)
