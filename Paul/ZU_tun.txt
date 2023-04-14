@@ -1,0 +1,5 @@
+Was ich noch machen soll:
+- Shapelet mit nem Classifier am Ende und die Stellen im COde finden und es Visualiseren
+- Rocket Gridsearch
+- Maybe 4.Algorithmus
+- Preprocessing anpassen, dass ein ganzer Datenstrang gesendet werden kann
