@@ -1,0 +1,2 @@
+sudo docker build -t project-image
+sudo docker run project-image

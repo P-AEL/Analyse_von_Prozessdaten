@@ -1,10 +1,10 @@
-FROM python
+FROM python:3.10
 
-ADD _pycache_ .
+ADD ./setup .
 
-RUN pip install -r requirements.txt
+RUN pip install pandas numpy tslearn fastapi python-multipart 
 
-CMD [ "python", "./_pycache_/main.py"]
+CMD [ "python", "main.py"]
 
 
  

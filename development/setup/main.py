@@ -8,7 +8,7 @@ import pandas as pd
 import numpy as np
 from tslearn.metrics import dtw
 
-old_data = pd.read_pickle(r"C:\Users\t-ehm\iCloudDrive\Studium\Data_Science_Semester4\Analyse_von_Prozess_und_Produktdaten\Analyse_von_Prozessdaten\development\setup\current_tank_data.pkl")
+old_data = pd.read_pickle(r"current_tank_data.pkl")
 
 def preprocessing_of_new_data(*,old_data = old_data, new_data):
     """preprocessing of new data and return it as a pandas dataframe.
