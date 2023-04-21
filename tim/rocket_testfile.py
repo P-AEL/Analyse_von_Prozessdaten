@@ -1,128 +1,17 @@
-## prediction using sktime rocket classifier
-
 import numpy as np
 import pandas as pd
-import random
 
 from sktime.classification.kernel_based import RocketClassifier
 from tslearn.preprocessing import TimeSeriesResampler
-from sklearn.metrics import accuracy_score
-
-
-
-#TODO
-# Temporäre Batch Speicherung
-# Batch mit Vorhersage in Datei speichern
-# Wenn DeviationID nicht 1, Fehler ausgeben
-
-
-
-# # load data
-# try:
-#     tank_training_data = pd.read_pickle(r"C:\Users\t-ehm\iCloudDrive\Studium\Data_Science_Semester4\Analyse_von_Prozess_und_Produktdaten\Analyse_von_Prozessdaten\development\setup\current_tank_data.pkl")
-# except:
-#     tank_training_data = pd.read_pickle(r"/Users/timehmann/Library/Mobile Documents/com~apple~CloudDocs/Studium/Data_Science_Semester4/Analyse_von_Prozess_und_Produktdaten/Analyse_von_Prozessdaten/development/setup/current_tank_data.pkl")
-
-# test_batch_numbers = random.sample(list(tank_training_data["Batch"].unique()), 78)
-
-# test_data = tank_training_data[tank_training_data["Batch"].isin(test_batch_numbers)]
-# train_data = tank_training_data[~tank_training_data["Batch"].isin(test_batch_numbers)]
-
-# test_data_step_changes = test_data.loc[test_data["CuStepNo ValueY"] != test_data["CuStepNo ValueY"].shift()]
-# train_data_step_changes = train_data.loc[train_data["CuStepNo ValueY"] != train_data["CuStepNo ValueY"].shift()]
-
-# # create X_train and y_train
-# # X_train_step_1 is a list of numpy arrays, each array is the data for step 1 for every batch
-# # X data is without DeviationID, Batch and CuStepNo, Next_step, timestamp and Unnamed: 0
-
-
-# ### TRAINING DATA STEP 1
-# X_train_step_1 = [train_data.loc[(train_data['Batch'] == i) & (train_data["CuStepNo ValueY"] == 1)].drop(columns=["DeviationID ValueY", "Batch", "CuStepNo ValueY", "Next_Step", "timestamp", "Unnamed: 0"]).to_numpy() for i in train_data["Batch"].unique()]
-# X_test_step_1 = [test_data.loc[(test_data['Batch'] == i) & (test_data["CuStepNo ValueY"] == 1)].drop(columns=["DeviationID ValueY", "Batch", "CuStepNo ValueY", "Next_Step", "timestamp", "Unnamed: 0"]).to_numpy() for i in test_data["Batch"].unique()]
-# y_train_step_1 = train_data_step_changes[train_data_step_changes["CuStepNo ValueY"] == 1]["DeviationID ValueY"].to_numpy()
-# y_test_step_1 = test_data_step_changes[test_data_step_changes["CuStepNo ValueY"] == 1]["DeviationID ValueY"].to_numpy()
-
-# data_amount_per_batch_s1 = [len(i) for i in X_train_step_1]
-
-# X_train_s1 = TimeSeriesResampler(sz=int(np.median(data_amount_per_batch_s1))).fit_transform(X_train_step_1)
-# X_test_s1 = TimeSeriesResampler(sz=int(np.median(data_amount_per_batch_s1))).fit_transform(X_test_step_1)
-
-# # X_train_s1 = X_train_s1.reshape(X_train_s1.shape[0],39,X_train_s1.shape[1])
-# # X_test_s1 = X_test_s1.reshape(X_test_s1.shape[0],39,X_test_s1.shape[1])
-
-# clf = RocketClassifier(num_kernels=500) 
-# clf.fit(X_train_s1, y_train_step_1) 
-# y_pred = clf.predict(X_test_s1)
-
-# print(accuracy_score(y_test_step_1, y_pred))
-
-
-# ### TRAINING DATA STEP 7
-# X_train_step_7 = [train_data.loc[(train_data['Batch'] == i) & (train_data["CuStepNo ValueY"] == 7)].drop(columns=["DeviationID ValueY", "Batch", "CuStepNo ValueY", "Next_Step", "timestamp", "Unnamed: 0"]).to_numpy() for i in train_data["Batch"].unique()]
-# X_test_step_7 = [test_data.loc[(test_data['Batch'] == i) & (test_data["CuStepNo ValueY"] == 7)].drop(columns=["DeviationID ValueY", "Batch", "CuStepNo ValueY", "Next_Step", "timestamp", "Unnamed: 0"]).to_numpy() for i in test_data["Batch"].unique()]
-# y_train_step_7 = train_data_step_changes[train_data_step_changes["CuStepNo ValueY"] == 7]["DeviationID ValueY"].to_numpy()
-# y_test_step_7 = test_data_step_changes[test_data_step_changes["CuStepNo ValueY"] == 7]["DeviationID ValueY"].to_numpy()
-
-# data_amount_per_batch_s7 = [len(i) for i in X_train_step_7]
-
-# X_train_s7 = TimeSeriesResampler(sz=int(np.median(data_amount_per_batch_s7))).fit_transform(X_train_step_7)
-# X_test_s7 = TimeSeriesResampler(sz=int(np.median(data_amount_per_batch_s7))).fit_transform(X_test_step_7)
-
-# # X_train_s7 = X_train_s7.reshape(X_train_s7.shape[0],39,X_train_s7.shape[1])
-# # X_test_s7 = X_test_s7.reshape(X_test_s7.shape[0],39,X_test_s7.shape[1])
-
-# clf = RocketClassifier(num_kernels=500)
-# clf.fit(X_train_s7, y_train_step_7)
-# y_pred = clf.predict(X_test_s7)
-
-# print(accuracy_score(y_test_step_7, y_pred))
-
-# ### TRAINING DATA STEP 8
-# X_train_step_8 = [train_data.loc[(train_data['Batch'] == i) & (train_data["CuStepNo ValueY"] == 8)].drop(columns=["DeviationID ValueY", "Batch", "CuStepNo ValueY", "Next_Step", "timestamp", "Unnamed: 0"]).to_numpy() for i in train_data["Batch"].unique()]
-# X_test_step_8 = [test_data.loc[(test_data['Batch'] == i) & (test_data["CuStepNo ValueY"] == 8)].drop(columns=["DeviationID ValueY", "Batch", "CuStepNo ValueY", "Next_Step", "timestamp", "Unnamed: 0"]).to_numpy() for i in test_data["Batch"].unique()]
-# y_train_step_8 = train_data_step_changes[train_data_step_changes["CuStepNo ValueY"] == 8]["DeviationID ValueY"].to_numpy()
-# y_test_step_8 = test_data_step_changes[test_data_step_changes["CuStepNo ValueY"] == 8]["DeviationID ValueY"].to_numpy()
-
-# data_amount_per_batch_s8 = [len(i) for i in X_train_step_8]
-
-# X_train_s8 = TimeSeriesResampler(sz=int(np.median(data_amount_per_batch_s8))).fit_transform(X_train_step_8)
-# X_test_s8 = TimeSeriesResampler(sz=int(np.median(data_amount_per_batch_s8))).fit_transform(X_test_step_8)
-
-# # X_train_s8 = X_train_s8.reshape(X_train_s8.shape[0],39,X_train_s8.shape[1])
-# # X_test_s8 = X_test_s8.reshape(X_test_s8.shape[0],39,X_test_s8.shape[1])
-
-# clf = RocketClassifier(num_kernels=500)
-# clf.fit(X_train_s8, y_train_step_8)
-# y_pred = clf.predict(X_test_s8)
-
-# print(accuracy_score(y_test_step_8, y_pred))
-
-# ### TRAINING DATA STEP 3
-# X_train_step_3 = [train_data.loc[(train_data['Batch'] == i) & (train_data["CuStepNo ValueY"] == 3)].drop(columns=["DeviationID ValueY", "Batch", "CuStepNo ValueY", "Next_Step", "timestamp", "Unnamed: 0"]).to_numpy() for i in train_data["Batch"].unique()]
-# X_test_step_3 = [test_data.loc[(test_data['Batch'] == i) & (test_data["CuStepNo ValueY"] == 3)].drop(columns=["DeviationID ValueY", "Batch", "CuStepNo ValueY", "Next_Step", "timestamp", "Unnamed: 0"]).to_numpy() for i in test_data["Batch"].unique()]
-# y_train_step_3 = train_data_step_changes[train_data_step_changes["CuStepNo ValueY"] == 3]["DeviationID ValueY"].to_numpy()
-# y_test_step_3 = test_data_step_changes[test_data_step_changes["CuStepNo ValueY"] == 3]["DeviationID ValueY"].to_numpy()
-
-# data_amount_per_batch_s3 = [len(i) for i in X_train_step_3]
-
-# X_train_s3 = TimeSeriesResampler(sz=int(np.median(data_amount_per_batch_s3))).fit_transform(X_train_step_3)
-# X_test_s3 = TimeSeriesResampler(sz=int(np.median(data_amount_per_batch_s3))).fit_transform(X_test_step_3)
-
-# # X_train_s3 = X_train_s3.reshape(X_train_s3.shape[0],39,X_train_s3.shape[1])
-# # X_test_s3 = X_test_s3.reshape(X_test_s3.shape[0],39,X_test_s3.shape[1])
-
-# clf = RocketClassifier(num_kernels=500)
-# clf.fit(X_train_s3, y_train_step_3)
-# y_pred = clf.predict(X_test_s3)
-
-# print(accuracy_score(y_test_step_3, y_pred))
-
-# Daten kommen rein
+from typing import Tuple
 
 try:
     tank_training_data = pd.read_pickle(r"C:\Users\t-ehm\iCloudDrive\Studium\Data_Science_Semester4\Analyse_von_Prozess_und_Produktdaten\Analyse_von_Prozessdaten\development\setup\current_tank_data.pkl")
 except:
     tank_training_data = pd.read_pickle(r"/Users/timehmann/Library/Mobile Documents/com~apple~CloudDocs/Studium/Data_Science_Semester4/Analyse_von_Prozess_und_Produktdaten/Analyse_von_Prozessdaten/development/setup/current_tank_data.pkl")
+
+# Drop last row of batch 238 because of data error
+tank_training_data.drop(tank_training_data.loc[(tank_training_data.Batch == 238)&(tank_training_data["CuStepNo ValueY"] == 3)].tail(1).index,inplace=True)
 
 # simulates new data coming in
 try:
@@ -130,45 +19,95 @@ try:
 except:
     new_data = pd.read_csv(r"/Users/timehmann/Library/Mobile Documents/com~apple~CloudDocs/Studium/Data_Science_Semester4/Analyse_von_Prozess_und_Produktdaten/Analyse_von_Prozessdaten/Paul/Batch_76.csv")
 
-new_data.drop(new_data.loc[(new_data.Batch == 238)&(new_data["CuStepNo ValueY"] == 3)].tail(1).index,inplace=True)
 
-# Daten aus dem aktuellen Batch ggf. aus Legacy Batch holen und preprocessing durchführen
-if new_data.iloc[0]["CuStepNo ValueY"] == 1 and tank_training_data.iloc[-1]["CuStepNo ValueY"] == 3:
-    data_to_analyse = new_data
-else:
-    newest_batch = tank_training_data.iloc[-1]["Batch"]
-    data_to_analyse = pd.concat([tank_training_data[tank_training_data["Batch"] == newest_batch], new_data])
-    tank_training_data = tank_training_data[tank_training_data["Batch"] != newest_batch]
+def get_data_to_analyse(incoming_data: pd.DataFrame) -> pd.DataFrame:
+    """
+    Returns the data that needs to be analysed.
+    If the incoming data is a new batch, its the only batch that needs to be predicted on.
+    If not, the saved data from the newest batch needs to be concatenated with the incoming data.
+    :param incoming_data: data that is coming in
+    :return: data that needs to be analysed
+    """
+    # importing the saved data from the newest batch
+    newest_batch_data = pd.read_csv(r"C:\Users\t-ehm\iCloudDrive\Studium\Data_Science_Semester4\Analyse_von_Prozess_und_Produktdaten\Analyse_von_Prozessdaten\tim\newest_batch_data.csv")
 
-# Aus den Einkommenden Daten wird der letzte Step genommen und entsprechend der Anzahl an überlieferten Datenpunkten aus diesem Step
-# wird in den Batches der Trainingsdaten für diesen Step die gleiche Anzahl an Datenpunkten genommen und der Rest gelöscht
-for i in tank_training_data["Batch"].unique():
-    tank_training_data.drop(tank_training_data.loc[(tank_training_data["Batch"] == i)&(tank_training_data["CuStepNo ValueY"] == data_to_analyse["CuStepNo ValueY"].unique()[-1])][data_to_analyse[data_to_analyse["CuStepNo ValueY"] == data_to_analyse["CuStepNo ValueY"].unique()[-1]].__len__():].index,inplace=True)
+    if incoming_data.iloc[0]["CuStepNo ValueY"] == 1 and newest_batch_data.iloc[-1]["CuStepNo ValueY"] == 3:
+        incoming_data['new_batch'] = np.where((incoming_data["CuStepNo ValueY"] == 1) & (incoming_data["CuStepNo ValueY"].shift(1) == 3), 1, 0)
+        incoming_data['Batch'] = incoming_data['new_batch'].cumsum() + newest_batch_data['Batch'].max() + 1
+        data_to_analyse = incoming_data.drop(columns=["new_batch", 'Unnamed: 0'])
+    else:
+        incoming_data["new_batch"] = np.where((incoming_data["CuStepNo ValueY"] == 1) & (incoming_data["CuStepNo ValueY"].shift(1) == 3), 1, 0)
+        incoming_data["Batch"] = incoming_data["new_batch"].cumsum() + newest_batch_data["Batch"].max()
+        data_to_analyse = pd.concat([newest_batch_data, incoming_data.drop(columns=["new_batch", 'Unnamed: 0'])])
+    
+    return data_to_analyse
 
-# Trainingsdaten erstellen
-X_train = [tank_training_data.loc[tank_training_data["Batch"]==i].drop(columns=["DeviationID ValueY", "Batch", "CuStepNo ValueY", "Next_Step", "timestamp", "Unnamed: 0"]).to_numpy() for i in tank_training_data["Batch"].unique()]
-y_train = np.array([tank_training_data.loc[tank_training_data["Batch"]==i]["DeviationID ValueY"].unique()[0] for i in tank_training_data["Batch"].unique()])
+def get_training_and_prediction_data(data_to_analyse: pd.DataFrame, tank_training_data: pd.DataFrame) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """
+    Calculates the training data according to the data to predict on.
+    Training data is getting reduced to the same steps that are included in the data to predict on.
+    For the newest step the amount of data points is reduced to the amount of data points in the data to predict on.
+    :param data_to_analyse: data to predict on
+    :param tank_training_data: training data
+    :return: X_train, y_train and data to predict on
+    """
+    
+    # get the last step of the data to predict on
+    last_step = data_to_analyse["CuStepNo ValueY"].unique()[-1]
 
-# Interpolation für gleiche Länge
-data_amount_per_batch = [len(i) for i in X_train]
-X_train = TimeSeriesResampler(sz=int(np.median(data_amount_per_batch))).fit_transform(X_train)
+    # get the amount of data points in the last step of the data to predict on
+    amount_of_data_points = data_to_analyse[data_to_analyse["CuStepNo ValueY"] == last_step].__len__()
 
-print(X_train.shape)
-X_train = X_train.reshape((X_train.shape[0],39,X_train.shape[1]))
-print(X_train.shape)
+    # delete all data points in the training data that are not in the last step of the data to predict on
+    for i in tank_training_data["Batch"].unique():
+        tank_training_data.drop(tank_training_data.loc[(tank_training_data["Batch"] == i)&(tank_training_data["CuStepNo ValueY"] == last_step)][amount_of_data_points:].index,inplace=True)
 
-# Training
-clf = RocketClassifier(num_kernels=500, n_jobs=-1)
-clf.fit(X_train, y_train)
+    # delete all the steps that are not in the data to predict on
+    for i in tank_training_data["CuStepNo ValueY"].unique():
+        if i not in data_to_analyse["CuStepNo ValueY"].unique():
+            tank_training_data.drop(tank_training_data.loc[tank_training_data["CuStepNo ValueY"] == i].index,inplace=True)
+    
+    # drop unnecessary columns of data_to_analyse
+    data_to_analyse.drop(columns=["DeviationID ValueY", "CuStepNo ValueY", "timestamp", "Batch"], inplace=True)
+    
+    # get training data. X_train_data is a list of numpy arrays. Each numpy array contains the data points of one batch
+    X_train_data = [tank_training_data.loc[tank_training_data["Batch"]==i].drop(columns=["DeviationID ValueY", "Batch", "CuStepNo ValueY", "Next_Step", "timestamp", "Unnamed: 0"]).to_numpy() for i in tank_training_data["Batch"].unique()]
+    y_train_data = np.array([tank_training_data.loc[tank_training_data["Batch"]==i]["DeviationID ValueY"].unique()[0] for i in tank_training_data["Batch"].unique()])
 
-# Vorhersage
+    # Interpolation of training data to the same length as the data to predict on. For data_to_analyse one dimension is added
+    data_points_per_batch = int(np.median([i.shape[0] for i in X_train_data]))
+    X_train_data = TimeSeriesResampler(sz=data_points_per_batch).fit_transform(X_train_data)
+    data_to_analyse = TimeSeriesResampler(sz=data_points_per_batch).fit_transform(np.expand_dims(data_to_analyse.to_numpy(), axis=0))
+    
+    # reshape X_train_data from (n_batches, n_data_points, n_features) to (n_batches, n_features, n_data_points)
+    print("X_train shape: ",X_train_data.shape)
+    X_train_data = np.transpose(X_train_data, (0, 2, 1))
+    print("X_train shape after reshape",X_train_data.shape)
+    print("data_to_analyse shape: ",data_to_analyse.shape)
 
-# Daten für Vorhersage vorbereiten
-# TODO WENN ALTE BATCHES HINZUGEFÜGT WURDEN; MÜSSEN NOCH ANDERE COLUMNS GELÖSCHT WERDEN
-data_to_analyse.drop(columns=["DeviationID ValueY", "CuStepNo ValueY", "timestamp", "Unnamed: 0"], inplace=True)
+    # reshape data_to_analyse from (n_data_points, n_features) to (1, n_features, n_data_points)
+    data_to_analyse = np.transpose(data_to_analyse, (0, 2, 1))
+    print("data_to_analyse shape after reshape: ",data_to_analyse.shape)
 
-print(clf.predict(data_to_analyse.to_numpy().reshape(1,39,data_to_analyse.__len__())))
+    return X_train_data, y_train_data, data_to_analyse
 
-#print difference between columns in train and predict
-#print(set(tank_training_data.columns) - set(data_to_analyse.columns))
-#print(set(data_to_analyse.columns) - set(tank_training_data.columns))
+
+data_to_analyse = get_data_to_analyse(new_data)
+
+# Put each batch to predict on in a dictionary
+batches_to_predict_dict = {i: data_to_analyse.loc[data_to_analyse["Batch"] == i] for i in data_to_analyse["Batch"].unique()}
+
+# update the file with the newest batch data
+newest_batch_data = batches_to_predict_dict[max(batches_to_predict_dict.keys())]
+newest_batch_data.to_csv(r"C:\Users\t-ehm\iCloudDrive\Studium\Data_Science_Semester4\Analyse_von_Prozess_und_Produktdaten\Analyse_von_Prozessdaten\tim\newest_batch_data_v2.csv", index=False)
+
+# Train and predict the DeviationID for each batch
+for batch in batches_to_predict_dict.keys():
+    X_train, y_train, data_to_analyse = get_training_and_prediction_data(batches_to_predict_dict[batch], tank_training_data)
+    clf = RocketClassifier(num_kernels=300, n_jobs=-1)
+    clf.fit(X_train, y_train)
+    predicted_deviation_id = clf.predict(data_to_analyse)
+    print(batch, predicted_deviation_id)
+    # write the prediction of the batch in a csv file as a new row
+    with open(r"C:\Users\t-ehm\iCloudDrive\Studium\Data_Science_Semester4\Analyse_von_Prozess_und_Produktdaten\Analyse_von_Prozessdaten\tim\batch_predictions.csv", "a") as f:
+        f.write(f"\n{batch},{predicted_deviation_id[0]}")
