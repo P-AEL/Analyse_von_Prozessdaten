@@ -1,2 +1,4 @@
 sudo docker build -t project-image
 sudo docker run project-image
+sudo docker run -p 8000:8000 python-image
+sudo docker exec -it 922d5cc91340 /bin/sh
