@@ -78,9 +78,9 @@ def get_training_and_prediction_data(data_to_analyse: pd.DataFrame, tank_trainin
 def get_deviation_info(deviation_id: int) -> str:
     """return Information about the deviation_id"""
     deviation_info = {1: "normal operation",
-                      2: "low drive speed (2300/m sb. 2600/min)",
-                      3: "high drive speed (2900/m sb. 2600/min)",
-                      4: "2nd pump (2600/min sb. 0/min)",
+                      2: "low drive speed (2300/m, should be at 2600/min)",
+                      3: "high drive speed (2900/m, should be at 2600/min)",
+                      4: "2nd pump (2600/min, should be at 0/min)",
                       5: "stuck valve (YC21006 at 100%, should be at 75%)",
                       6: "stuck valve (YC22006 at 100%, should be at 75%)",
                       7: "stuck valve (YC23006 at 100%, should be at 75%)",
