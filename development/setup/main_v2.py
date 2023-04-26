@@ -53,41 +53,41 @@ def get_training_and_prediction_data(data_to_analyse: pd.DataFrame, tank_trainin
         tank_training_data.drop(tank_training_data.loc[(tank_training_data["Batch"] == i)&(tank_training_data["CuStepNo ValueY"] == last_step)][amount_of_data_points:].index,inplace=True)
 
     # delete all the steps that are not in the data to predict on
-    for i in tank_training_data["CuStepNo ValueY"].unique():
-        if i not in data_to_analyse["CuStepNo ValueY"].unique():
-            tank_training_data.drop(tank_training_data.loc[tank_training_data["CuStepNo ValueY"] == i].index,inplace=True)
-    
+    tank_training_data.drop(tank_training_data.loc[~tank_training_data["CuStepNo ValueY"].isin(data_to_analyse["CuStepNo ValueY"].unique())].index, inplace=True)
     
     # get training data. X_train_data is a list of numpy arrays. Each numpy array contains the data points of one batch
     X_train_data = [tank_training_data.loc[tank_training_data["Batch"]==i].drop(columns=["DeviationID ValueY", "Batch", "CuStepNo ValueY", "Next_Step", "timestamp", "Unnamed: 0"]).to_numpy() for i in tank_training_data["Batch"].unique()]
     y_train_data = np.array([tank_training_data.loc[tank_training_data["Batch"]==i]["DeviationID ValueY"].unique()[0] for i in tank_training_data["Batch"].unique()])
 
     # Interpolation of training data to the same length as the data to predict on. For data_to_analyse one dimension is added
-    print("Data points in Batch 200", tank_training_data.loc[tank_training_data["Batch"]==200].shape[0])
-    print("Data points for mainleveltank in Batch 200 by step", tank_training_data.loc[(tank_training_data["Batch"]==200)].groupby("CuStepNo ValueY").count()["LevelMainTank ValueY"])
-    print("Data points in data_to_analyse", data_to_analyse.shape[0])
-    print("Data points for mainleveltank in data_to_analyse by step", data_to_analyse.groupby("CuStepNo ValueY").count()["LevelMainTank ValueY"])
     data_points_per_batch = int(np.median([i.shape[0] for i in X_train_data]))
     X_train_data = TimeSeriesResampler(sz=data_points_per_batch).fit_transform(X_train_data)
-    print("data_points_per_batch: ",data_points_per_batch)
-    print("X_train_data shape: ",X_train_data.shape)
-    print("data_to_analyse shape: ",data_to_analyse.shape)
-    # drop unnecessary columns of data_to_analyse
-    data_to_analyse.drop(columns=["DeviationID ValueY", "CuStepNo ValueY", "timestamp", "Batch"], inplace=True)
     
+    # drop unnecessary columns of data_to_analyse and interpolate it
+    data_to_analyse.drop(columns=["DeviationID ValueY", "CuStepNo ValueY", "timestamp", "Batch"], inplace=True)
     data_to_analyse = TimeSeriesResampler(sz=data_points_per_batch).fit_transform(np.expand_dims(data_to_analyse.to_numpy(), axis=0))
     
     # reshape X_train_data from (n_batches, n_data_points, n_features) to (n_batches, n_features, n_data_points)
-    print("X_train shape: ",X_train_data.shape)
     X_train_data = np.transpose(X_train_data, (0, 2, 1))
-    print("X_train shape after reshape",X_train_data.shape)
-    print("data_to_analyse shape: ",data_to_analyse.shape)
 
     # reshape data_to_analyse from (n_data_points, n_features) to (1, n_features, n_data_points)
     data_to_analyse = np.transpose(data_to_analyse, (0, 2, 1))
-    print("data_to_analyse shape after reshape: ",data_to_analyse.shape)
 
     return X_train_data, y_train_data, data_to_analyse
+
+def get_deviation_info(deviation_id: int) -> str:
+    """return Information about the deviation_id"""
+    deviation_info = {1: "normal operation",
+                      2: "low drive speed (2300/m sb. 2600/min)",
+                      3: "high drive speed (2900/m sb. 2600/min)",
+                      4: "2nd pump (2600/min sb. 0/min)",
+                      5: "stuck valve (YC21006 at 100%, should be at 75%)",
+                      6: "stuck valve (YC22006 at 100%, should be at 75%)",
+                      7: "stuck valve (YC23006 at 100%, should be at 75%)",
+                      8: "short circuit (YS14005 at 100%, should be at 0%)",
+                      9: "leakage (PL2150 at 10Hz sb. 0Hz, YS14004 at 100%, should be at 0%)",
+                      10: "no venting (SY10004 at 0%, should be at 100%)"}
+    return deviation_info[deviation_id]
 
 app = FastAPI()
 
@@ -125,7 +125,8 @@ async def receive_data(file: UploadFile = File(...)):
             clf = RocketClassifier(num_kernels=300, n_jobs=-1)
             clf.fit(X_train, y_train)
             predicted_deviation_id = clf.predict(data_to_analyse)
-            print(batch, predicted_deviation_id)
+
+            print(batch, predicted_deviation_id, get_deviation_info(predicted_deviation_id[0]))
             # write the prediction of the batch in a csv file as a new row
             with open(r"C:\Users\t-ehm\iCloudDrive\Studium\Data_Science_Semester4\Analyse_von_Prozess_und_Produktdaten\Analyse_von_Prozessdaten\tim\batch_predictions.csv", "a") as f:
                 f.write(f"\n{batch},{predicted_deviation_id[0]}")

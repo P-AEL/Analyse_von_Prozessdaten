@@ -38,7 +38,7 @@ for i in range(0, num_rows, batch_size):
     response = requests.post(url=url, files={'file': file_data})
 
     # Wait for 30 seconds before sending the next request
-    time.sleep(10)
+    time.sleep(3)
 
 # Delete the temporary batch file
 os.remove('batch_temp.csv')
